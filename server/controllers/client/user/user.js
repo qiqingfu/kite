@@ -36,6 +36,7 @@ function ErrorMessage (message) {
 
 class User {
   static async userSignIn (req, res, next) {
+    // no_login 为客户端是否可登陆
     const { no_login } = lowdb
       .read()
       .get('config')
@@ -76,10 +77,12 @@ class User {
             tools.encrypt(reqDate.password, config.ENCRYPT_KEY) ===
             oneUser.dataValues.password
           ) {
+            // 将当前用户的主键加密为token发送给客户端
             let user_info = {
               uid: oneUser.uid
             }
 
+            // 生成token发送给客户端存储s
             let token = tokens.ClientSetToken(60 * 60 * 24 * 7, user_info)
 
             await resClientJson(res, {
@@ -265,6 +268,7 @@ class User {
         })
 
         if (!oneUserEmail) {
+          // 根据注册的邮箱读取对应的验证码
           await models.verify_code
             .findOne({
               where: {
@@ -296,6 +300,12 @@ class User {
 
           await models.sequelize.transaction(t => {
             // 在事务中执行操作
+            // 事务对象调用回调, 并且应该返回一个 Promise, 如果Promise被解析
+            // 则事务提交, 如果Promise解析失败, 则事务回滚
+            // 为了保证数据的完整性、一致性
+            // 以下三条 DML语句, 要么同时成功, 要么同时失败
+
+            // 1. 初始化用户表
             return models.user
               .create(
                 {
@@ -314,7 +324,9 @@ class User {
               .then(user => {
                 return models.user_info.create(
                   {
-                    /* 注册写入数据库操作 */
+                    // 1. 初始化用户信息表
+                    // 2. user表的主键作为user_info表的外键相关联
+                    // 3. 初始化贝壳金额, 新用户注册为 3000
                     uid: user.uid,
                     avatar_review_status: 2,
                     shell_balance:
@@ -324,6 +336,9 @@ class User {
                 )
               })
               .then(user_info => {
+                // 1. 初始化贝壳比表
+                // 2. 将用户信息表的主键uid作为外键关联virtual表的uid字段
+                // 3. 同步贝壳数据
                 return models.virtual.create({
                   // 用户虚拟币消息记录
                   plus_less: virtualInfo[modelAction.registered].plusLess,

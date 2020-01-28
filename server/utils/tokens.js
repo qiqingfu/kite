@@ -106,13 +106,14 @@ class Tokens {
     }
   }
 
-  static AdminSetToken(time, data) {
+  static AdminSetToken (time, data) {
     return jwt.sign(data, 'admin', {
       expiresIn: time
     })
   }
 
-  static ClientSetToken(time, data) {
+  // 生成客户端的用户token
+  static ClientSetToken (time, data) {
     return jwt.sign(data, 'client', {
       expiresIn: time
     })

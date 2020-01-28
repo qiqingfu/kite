@@ -82,6 +82,7 @@ export default {
           if (res.state === 'success') {
             this.$message.success(res.message)
             this.$refs.login.reset()
+            // 保存服务器生成的token
             cookie.set('accessToken', res.data.token, 7)
             this.$router.push({ name: 'home' })
           } else {
