@@ -1216,6 +1216,7 @@ class User {
       let dynamicThumdId = [] // 动态点赞id
       let userAttentionId = [] // 用户关注id
       let { user = '', islogin } = req
+      // 未登陆, 默认获取空数据
       if (!islogin) {
         resClientJson(res, {
           state: 'success',
@@ -1242,6 +1243,7 @@ class User {
         }
       })
 
+      // 当前用户赞过的文章和片刻
       for (let i in allThumb) {
         if (allThumb[i].type === modelType.article) {
           articleThumdId.push(allThumb[i].associate_id)

@@ -20,6 +20,7 @@ export default {
     ])
   },
   mounted() {
+    // 获取未读消息, 获取文章、片刻关联信息
     this.$store.dispatch('user/GET_UNREAD_MESSAGE_COUNT')
     this.$store.dispatch('user/GET_ASSOCIATE_INFO')
   },

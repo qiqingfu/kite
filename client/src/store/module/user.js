@@ -64,7 +64,7 @@ const actions = {
       url: '/user/blog-all',
       method: 'get',
       parameter: { params: { uid } }
-    }).then(result => {
+    }).then(result => {s
       commit('SET_USER_ARTICLE_BLOG_ALL', result.data)
       return result
     })

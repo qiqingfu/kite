@@ -52,6 +52,7 @@ class User {
   static async userUnreadCount (uid) {
     // 用户未读消息
     try {
+      // SELECT COUNT(uid) FROM user_message WHERE uid = 10001 AND is_read = false;
       let messageCount = await models.user_message.count({
         where: {
           uid: uid,

@@ -12,7 +12,7 @@ const models = require('../../db/mysqldb')
  * 4 错误处理统一处理
  * @param app
  */
-function graphql(app) {
+function graphql (app) {
   const server = new ApolloServer({
     // 启用和禁用架构自省。默认情况下在生产中禁用
     introspection: !isProd,
@@ -21,6 +21,7 @@ function graphql(app) {
     debug: !isProd,
     // 一个可执行的Graphql架构,它将覆盖提供的typeDefs和解析器
     // 如果您正在使用文件上传，则必须将 Upload 标量添加到模式中，因为在手动设置模式的情况下，不会自动添加 Upload 标量。
+    // 通过 makeExecutableSchema 从Graphql模式语言创建 GraphqlSchema实例s
     schema: makeExecutableSchema({
       typeDefs,
       resolvers
